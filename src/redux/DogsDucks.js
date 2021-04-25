@@ -70,48 +70,6 @@ export const getBreedsDogsAction = () => async(dispatch) =>{
     }
 }
 
-/* export const shearchImagesDogsAction = (breed_name) => async(dispatch) =>{
-    dispatch({
-        type: LOADING_DATA
-    })
-    if(sessionStorage.getItem(breed_name)){
-        dispatch({
-            type: GET_IMAGES_BREEDS_DOGS_SUCCESS,
-            payload: JSON.parse(sessionStorage.getItem(breed_name)) 
-        })
-        return
-    }
-    try {        
-        const res = await axios.get(`${configuration.API_URL_BASE}${configuration.ENDPOINT_IMAGES_BREEDS}${breed_name}/images`)        
-        if(res.status === 200){
-            dispatch({
-                type: GET_IMAGES_BREEDS_DOGS_SUCCESS,
-                payload: {
-                    busqueda: breed_name,
-                    images: res.data.message
-                }
-            })
-        }
-        sessionStorage.setItem(breed_name, JSON.stringify({
-            busqueda: breed_name,
-            images: res.data.message
-        }))
-        
-    } catch (error) {
-        switch(error.response.status){
-            case 404:
-                console.log('Error 404')
-                return
-            case 500:
-                console.log('Error 500')
-                return
-            default: 
-                console.log('Error general')
-                return
-        }
-    }
-} */
-
 export const shearchImagesDogsAction = (breed_name) => async(dispatch,getState) =>{    
     const {data_images} = getState().data     
     dispatch({

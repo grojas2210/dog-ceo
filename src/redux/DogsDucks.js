@@ -23,7 +23,7 @@ export default function dogsReducer(state = dataInicial, action){
         case GET_BREEDS_DOGS_SUCCESS:
             return{...state, data: action.payload, loading: false}
         case GET_IMAGES_BREEDS_DOGS_SUCCESS:
-            return{...state, data_images:action.payload.data_images, loading:false}
+            return{...state, data_images:action.payload, loading:false}
         default:
             return {...state}
     }
@@ -71,25 +71,23 @@ export const getBreedsDogsAction = () => async(dispatch) =>{
 }
 
 export const shearchImagesDogsAction = (breed_name) => async(dispatch,getState) =>{    
-    const {data_images} = getState().data     
+    const {data_images} = getState().data 
     dispatch({
         type: LOADING_DATA
-    })
-    try {  
+    })  
+    try {          
         const arrayImgs = []                 
         const res = await axios.get(`${configuration.API_URL_BASE}${configuration.ENDPOINT_IMAGES_BREEDS}${breed_name}/images`)                    
         if(res.status === 200){                   
             res.data.message.map(img=>(                
-                arrayImgs.push({img: img})
+                arrayImgs.push(img)
             ))              
         }
+        const arrayDogs = [...data_images, [{imgs: arrayImgs ,breedName: breed_name}]].flat()       
         dispatch({
             type: GET_IMAGES_BREEDS_DOGS_SUCCESS,
-            payload: {
-                //data_images: [arrayImgs]
-                data_images: [...data_images.concat(arrayImgs)]
-            }
-        }) 
+            payload: arrayDogs
+        })         
             
         
     } catch (error) {

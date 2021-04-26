@@ -27,13 +27,12 @@ const DogCeo = () => {
     const dispatch = useDispatch()
     const breeds = useSelector(store => store.data.data)
     const loading = useSelector(store => store.data.loading)   
-    const images = useSelector(store=>store.data.data_images)           
+    const images = useSelector(store=>store.data.data_images)          
     
-    //console.log(Object.values(images))
+    
     const [open, setOpen] = React.useState(false)   
-    const [arrayBuscados, setArrayBuscados] = React.useState([]) 
+    const [arrayBuscados, setArrayBuscados] = React.useState([])     
     
-    //console.log('arrayBuscados',arrayBuscados)
     React.useEffect(()=>{
         const fetchData = ()=>{
             dispatch(getBreedsDogsAction())                       
@@ -43,7 +42,7 @@ const DogCeo = () => {
 
     React.useEffect(()=>{    
         const shearchDogs = () =>{             
-            arrayBuscados.map(breed=>(
+            arrayBuscados.map(breed=> (                          
                 dispatch(shearchImagesDogsAction(breed)) 
             ))   
         }
@@ -68,8 +67,9 @@ const DogCeo = () => {
         if(buscados.length > 0 ){
             setArrayBuscados(buscados)      
         }   
-    }     
-   
+    }    
+    
+    
     return (        
         <div className={classes.root}>
             <Navbar open={openMenu}/>
@@ -81,7 +81,7 @@ const DogCeo = () => {
             </Hidden>            
             <div className={classes.content}>
                 <div className={classes.toolBar}>       
-                    {
+                    {                        
                         !loading ? (
                             images.length > 0 ? (
                                 <Card images={images} breedSearch={arrayBuscados}/>

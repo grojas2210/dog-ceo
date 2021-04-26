@@ -12,9 +12,11 @@ const useStyles = makeStyles((theme) => ({
 
 const ItemNav = (props) => {
     const classes = useStyles()  
+    
     const [open, setOpen] = React.useState(false) 
     const [isChecked, setIsChecked] = React.useState(props.data.slice().fill(false).flat())  
-    const [buscados, setBuscado] = React.useState([])      
+    const [buscados, setBuscado] = React.useState([])    
+    
 
     React.useEffect(()=>{
         const fetchBuscados = () =>{

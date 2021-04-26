@@ -70,11 +70,12 @@ export const getBreedsDogsAction = () => async(dispatch) =>{
     }
 }
 
-export const shearchImagesDogsAction = (breed_name) => async(dispatch,getState) =>{    
+export const shearchImagesDogsAction = (breed_name,arrayBuscados) => async(dispatch,getState) =>{    
     const {data_images} = getState().data 
     dispatch({
         type: LOADING_DATA
-    })  
+    }) 
+    
     try {          
         const arrayImgs = []                 
         const res = await axios.get(`${configuration.API_URL_BASE}${configuration.ENDPOINT_IMAGES_BREEDS}${breed_name}/images`)                    
@@ -82,8 +83,16 @@ export const shearchImagesDogsAction = (breed_name) => async(dispatch,getState) 
             res.data.message.map(img=>(                
                 arrayImgs.push(img)
             ))              
-        }
-        const arrayDogs = [...data_images, [{imgs: arrayImgs ,breedName: breed_name}]].flat()       
+        }         
+        const arrayInitDogs = [...data_images, [{imgs: arrayImgs ,breedName: breed_name}]].flat()
+        const uniqueArrayDogs = Array.from(new Set(arrayInitDogs.map(a => a.breedName)))
+            .map(b =>{
+                return arrayInitDogs.find(a=>a.breedName === b)
+            }) 
+        const arrayDogs = uniqueArrayDogs.filter(obj =>{
+            return arrayBuscados.indexOf(obj.breedName) !== -1 ? obj : null
+        }, arrayBuscados)
+
         dispatch({
             type: GET_IMAGES_BREEDS_DOGS_SUCCESS,
             payload: arrayDogs
@@ -104,3 +113,4 @@ export const shearchImagesDogsAction = (breed_name) => async(dispatch,getState) 
         }
     }
 }
+

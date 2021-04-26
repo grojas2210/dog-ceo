@@ -29,7 +29,6 @@ const DogCeo = () => {
     const loading = useSelector(store => store.data.loading)   
     const images = useSelector(store=>store.data.data_images)          
     
-    
     const [open, setOpen] = React.useState(false)   
     const [arrayBuscados, setArrayBuscados] = React.useState([])     
     
@@ -43,7 +42,7 @@ const DogCeo = () => {
     React.useEffect(()=>{    
         const shearchDogs = () =>{             
             arrayBuscados.map(breed=> (                          
-                dispatch(shearchImagesDogsAction(breed)) 
+                dispatch(shearchImagesDogsAction(breed,arrayBuscados)) 
             ))   
         }
         shearchDogs()
@@ -58,7 +57,6 @@ const DogCeo = () => {
     }).map(e =>{ 
         return e.subBreed
     })
-
     const openMenu = () =>{        
         setOpen(!open)
     }
@@ -69,7 +67,16 @@ const DogCeo = () => {
         }   
     }    
     
-    
+    /* const nuevoArraySubbreeds = arrayBuscados.map(item=>{        
+        return breeds.filter(b=>{                       
+            return(b.subBreed.length > 0 && b.breed === item) ? b.subBreed : null
+        })
+        .map(e=>{                      
+            return e.subBreed
+        })
+        
+    }) */
+
     return (        
         <div className={classes.root}>
             <Navbar open={openMenu}/>

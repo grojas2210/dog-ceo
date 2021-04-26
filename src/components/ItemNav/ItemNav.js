@@ -15,8 +15,7 @@ const ItemNav = (props) => {
     
     const [open, setOpen] = React.useState(false) 
     const [isChecked, setIsChecked] = React.useState(props.data.slice().fill(false).flat())  
-    const [buscados, setBuscado] = React.useState([])    
-    
+    const [buscados, setBuscado] = React.useState([])     
 
     React.useEffect(()=>{
         const fetchBuscados = () =>{
@@ -24,7 +23,7 @@ const ItemNav = (props) => {
         }
         fetchBuscados()
     },[props,buscados])
-    
+        
     const handleClick = () =>{    
         setOpen(!open)  
     }   
@@ -65,13 +64,14 @@ const ItemNav = (props) => {
                     <Collapse in={open} timeout="auto">
                         <List component="div">
                             {
-                                props.data.map((item,index)=>(
+                                props.data.map((item,index)=>(   
+                                    item.length > 0 &&                                 
                                     <ListItem key={`${item}${index}`} button className={classes.nested}>
-                                        <ListItemIcon>
-                                            <Checkbox value={item} checked={isChecked[index]} onChange={()=>toogleCheckChange(index,item)}></Checkbox>
+                                        <ListItemIcon>                                            
+                                            <Checkbox value={item} checked={isChecked[index]} onChange={()=>toogleCheckChange(index,item)}></Checkbox>                                                                                      
                                         </ListItemIcon>
                                         <ListItemText primary={item}></ListItemText>
-                                    </ListItem>
+                                    </ListItem>                                                                       
                                 ))
                             }
                         </List>

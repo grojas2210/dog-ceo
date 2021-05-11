@@ -1,15 +1,19 @@
-import DogCeo from "./components/DogCeo/DogCeo";
-import { ThemeProvider, unstable_createMuiStrictModeTheme as createMuiTheme} from '@material-ui/core/styles'
-
+import {
+  ThemeProvider,
+  unstable_createMuiStrictModeTheme as createMuiTheme,
+} from "@material-ui/core/styles";
+import DogCeoProvider from "./context/DogCeoProvider";
+import DogCeo from "./presentacion/UI/DogCeo/DogCeo";
 
 function App() {
+  const theme = createMuiTheme();
 
-  const theme = createMuiTheme()
- 
   return (
+    <DogCeoProvider>
       <ThemeProvider theme={theme}>
-        <DogCeo/>
-      </ThemeProvider>      
+        <DogCeo />
+      </ThemeProvider>
+    </DogCeoProvider>
   );
 }
 

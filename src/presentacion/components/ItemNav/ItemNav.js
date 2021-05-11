@@ -1,6 +1,7 @@
 import { Checkbox, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core'
 
 import React from 'react'
+import { DogContext } from '../../../context/DogCeoProvider';
 
 const useStyles = makeStyles((theme) => ({       
     nested: {
@@ -10,18 +11,19 @@ const useStyles = makeStyles((theme) => ({
 
 const ItemNav = (props) => {
     const classes = useStyles()
+    const {checkBoxHandler, dogCeo} = React.useContext(DogContext) 
     return ( 
         <>   
         {            
             props.type === 'sub_breed' ? 
             (
-                props.dogCeo.map((filter,idx)=>(
+                dogCeo.map((filter,idx)=>(
                     filter.breed.checked &&
                     filter.subBreed.map(sub=>(    
                         <ListItem key={`${sub.name}${idx}`} button className={classes.nested}>
                             <ListItemIcon>                                            
                                 <Checkbox                                     
-                                    onChange={()=>props.change(props.dogCeo, props.type, sub.name, sub.checked)}
+                                    onChange={()=>checkBoxHandler(dogCeo, props.type, sub.name, sub.checked)}
                                     value={sub.name}
                                     checked={sub.checked}
                                 />                                                                                      
@@ -31,11 +33,11 @@ const ItemNav = (props) => {
                     ))
                 ))
             ) : (
-            props.dogCeo.map((filter,idx)=>(
+                dogCeo.map((filter,idx)=>(
                 <ListItem key={`${filter.breed.name}${idx}`} button className={classes.nested}>
                     <ListItemIcon>                                            
                         <Checkbox 
-                            onChange={()=>props.change(props.dogCeo, props.type, filter.breed.name, filter.breed.checked)}
+                            onChange={()=>checkBoxHandler(dogCeo, props.type, filter.breed.name, filter.breed.checked)}
                             value={filter.breed.name}
                             checked={filter.breed.checked}
                         />                                                                                      

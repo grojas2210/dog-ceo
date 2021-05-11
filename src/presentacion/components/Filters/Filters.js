@@ -1,5 +1,6 @@
 import { Drawer, List, makeStyles } from '@material-ui/core'
 import React from 'react'
+import { DogContext } from '../../../context/DogCeoProvider';
 import TitleNavItem from '../TitleNavItem/TitleNavItem';
 const drawerWidth = 260;
 
@@ -15,7 +16,8 @@ const useStyles = makeStyles((theme)=>({
 }))
 const Filters = (props) => {
     const classes = useStyles() 
-    
+    const {openCollapses} = React.useContext(DogContext)
+
     return (
         <Drawer
             className={classes.drawer} 
@@ -33,11 +35,8 @@ const Filters = (props) => {
                         props.items.map(item=>(
                             <div key={item}>
                                 <TitleNavItem 
-                                    nameItem={item === 'breed' ? "Razas" : "SubRazas"} 
-                                    clicked={props.clicked} 
-                                    openCol={item === "breed" ? props.openCol.collapseBreed : props.openCol.collapseSubBreed}
-                                    dogCeo={props.dogCeo}
-                                    change={props.change}
+                                    nameItem={item === 'breed' ? "Razas" : "SubRazas"}
+                                    openCol={item === "breed" ? openCollapses.collapseBreed : openCollapses.collapseSubBreed}                                    
                                     type={item}
                                 />
                             </div>                            

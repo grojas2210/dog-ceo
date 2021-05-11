@@ -1,6 +1,6 @@
 import { CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
-import Info from '../Info/Info'
+import { DogContext } from '../../../context/DogCeoProvider'
 
 const useStyles = makeStyles((theme)=> ({   
     content: {
@@ -10,12 +10,13 @@ const useStyles = makeStyles((theme)=> ({
     
 })) 
 
-const Card = (props) => { 
+const Card = () => { 
     const classes = useStyles()
+    const {dogCeo} = React.useContext(DogContext)   
     return (        
         <Grid container> 
         {
-            props.dogCeo.map((filter)=>(
+            dogCeo.map((filter)=>(
                 filter.subBreed.filter(sb=>sb.checked).length === 0 && filter.breed.checked ?                         
                     filter.images.map(img=>( 
                         <Grid key={img} item xs={12} sm={6} md={4} className={classes.content}>

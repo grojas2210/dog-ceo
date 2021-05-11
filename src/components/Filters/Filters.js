@@ -1,7 +1,7 @@
-import { Drawer, makeStyles } from '@material-ui/core'
+import { Drawer, List, makeStyles } from '@material-ui/core'
 import React from 'react'
-import ItemNav from '../ItemNav/ItemNav';
-const drawerWidth = 240;
+import TitleNavItem from '../TitleNavItem/TitleNavItem';
+const drawerWidth = 260;
 
 const useStyles = makeStyles((theme)=>({
     drawer:{
@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme)=>({
     toolbar: theme.mixins.toolbar,
 }))
 const Filters = (props) => {
-    const classes = useStyles()
+    const classes = useStyles() 
     
     return (
         <Drawer
@@ -27,9 +27,24 @@ const Filters = (props) => {
             open = {props.open}
             onClose={props.closed ? props.closed : null}
         >
-            <div className={classes.toolbar}></div>
-            <ItemNav nameItem="Razas" data={props.dataBreeds} loading={props.loading} arrayBuscados={props.buscados}/>
-            <ItemNav nameItem="SubRazas" data={props.dataSubBreeds} loading={props.loading} arrayBuscados={props.buscados}/>
+            <div className={classes.toolbar}></div>                            
+                <List component="nav">
+                    {
+                        props.items.map(item=>(
+                            <div key={item}>
+                                <TitleNavItem 
+                                    nameItem={item === 'breed' ? "Razas" : "SubRazas"} 
+                                    clicked={props.clicked} 
+                                    openCol={item === "breed" ? props.openCol.collapseBreed : props.openCol.collapseSubBreed}
+                                    dogCeo={props.dogCeo}
+                                    change={props.change}
+                                    type={item}
+                                />
+                            </div>                            
+                        ))
+                    }             
+                </List>
+            
         </Drawer>
     )
 }

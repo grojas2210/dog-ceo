@@ -4,15 +4,14 @@ import configuration from '../config/config'
 
 
 const dataInicial = {
-    data:[],
-    loading: true,
-    data_images: []
+    dataDogs: [],   
+    loading: true
 }
+
 
 //types
 const LOADING_DATA = 'LOADING_DATA'
 const GET_BREEDS_DOGS_SUCCESS = 'GET_BREEDS_DOGS_SUCCESS'
-const GET_IMAGES_BREEDS_DOGS_SUCCESS = 'GET_IMAGES_BREEDS_DOGS_SUCCESS'
 
 //reducer
 
@@ -21,9 +20,7 @@ export default function dogsReducer(state = dataInicial, action){
         case LOADING_DATA:
             return {...state, loading:false}
         case GET_BREEDS_DOGS_SUCCESS:
-            return{...state, data: action.payload, loading: false}
-        case GET_IMAGES_BREEDS_DOGS_SUCCESS:
-            return{...state, data_images:action.payload, loading:false}
+            return{...state, dataDogs: action.payload, loading: false}  
         default:
             return {...state}
     }
@@ -35,10 +32,10 @@ export const getBreedsDogsAction = () => async(dispatch) =>{
     dispatch({
         type: LOADING_DATA
     })
-    if(sessionStorage.getItem('dataFilter')){
+    if(sessionStorage.getItem('dataDogs')){
         dispatch({
             type: GET_BREEDS_DOGS_SUCCESS,
-            payload: JSON.parse(sessionStorage.getItem('dataFilter')),
+            payload: JSON.parse(sessionStorage.getItem('dataDogs')),
         }) 
         return
     }
@@ -46,59 +43,35 @@ export const getBreedsDogsAction = () => async(dispatch) =>{
         const res = await axios.get(`${configuration.API_URL_BASE}${configuration.ENDPOINT_BREEDS}`)        
         const arrayNew = Object.entries(res.data.message)
                 .map(([key,value]) => {
-                    return { breed: key, subBreed: value}
-                })           
+                    const objSub = []
+                    if(value.length > 0){
+                        value.map(sub =>(
+                            objSub.push({name: `${key}-${sub}`, type: "sub_breed", checked: false})                            
+                        ))                        
+                    }else{
+                        objSub.push()                        
+                    }                    
+                    return {images: [], breed: {name: key,type: "breed", checked: false},subBreed: objSub}
+                }) 
+
+        const asyncImages = await Promise.all(arrayNew.map(async(element)=>{
+            const res = await axios.get(`${configuration.API_URL_BASE}${configuration.ENDPOINT_IMAGES_BREEDS}${element.breed.name}/images`)            
+            if(res.status === 200){ 
+                const objeto = {
+                    ...element,
+                    images: res.data.message
+                }                  
+                return objeto             
+            }  
+        }))
+
         if(res.status === 200){
             dispatch({
                 type: GET_BREEDS_DOGS_SUCCESS,
-                payload: arrayNew,
+                payload: asyncImages,
             })            
         }
-        sessionStorage.setItem('dataFilter', JSON.stringify(arrayNew))
-    } catch (error) {
-        switch(error.response.status){
-            case 404:
-                console.log('Error 404')
-                return
-            case 500:
-                console.log('Error 500')
-                return
-            default: 
-                console.log('Error general')
-                return
-        }
-    }
-}
-
-export const shearchImagesDogsAction = (breed_name,arrayBuscados) => async(dispatch,getState) =>{    
-    const {data_images} = getState().data 
-    dispatch({
-        type: LOADING_DATA
-    }) 
-    
-    try {          
-        const arrayImgs = []                 
-        const res = await axios.get(`${configuration.API_URL_BASE}${configuration.ENDPOINT_IMAGES_BREEDS}${breed_name}/images`)                    
-        if(res.status === 200){                   
-            res.data.message.map(img=>(                
-                arrayImgs.push(img)
-            ))              
-        }         
-        const arrayInitDogs = [...data_images, [{imgs: arrayImgs ,breedName: breed_name}]].flat()
-        const uniqueArrayDogs = Array.from(new Set(arrayInitDogs.map(a => a.breedName)))
-            .map(b =>{
-                return arrayInitDogs.find(a=>a.breedName === b)
-            }) 
-        const arrayDogs = uniqueArrayDogs.filter(obj =>{
-            return arrayBuscados.indexOf(obj.breedName) !== -1 ? obj : null
-        }, arrayBuscados)
-
-        dispatch({
-            type: GET_IMAGES_BREEDS_DOGS_SUCCESS,
-            payload: arrayDogs
-        })         
-            
-        
+        sessionStorage.setItem('dataDogs', JSON.stringify(asyncImages))
     } catch (error) {
         switch(error.response.status){
             case 404:

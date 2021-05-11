@@ -1,7 +1,7 @@
 import { Hidden, makeStyles } from '@material-ui/core'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {getBreedsDogsAction, shearchImagesDogsAction} from '../../redux/DogsDucks'
+import {getBreedsDogsAction} from '../../redux/DogsDucks'
 import Card from '../Card/Card'
 import Filters from '../Filters/Filters'
 import Info from '../Info/Info'
@@ -20,80 +20,155 @@ const useStyles = makeStyles((theme)=> ({
         marginTop:50
     },
 })) 
-
+const DUMMY_DATA = [
+    {
+      breed: {
+        name: "bulldog",
+        type: "breed",
+        checked: false
+      },
+      subBreed: [
+        { name: "bulldog-boston", type: "sub_breed", checked: false },
+        { name: "bulldog-english", type: "sub_breed", checked: false },
+        { name: "bulldog-french", type: "sub_breed", checked: false }
+      ],
+      images: [
+        "https://images.dog.ceo/breeds/bulldog-boston/20200710_175933.jpg",
+        "https://images.dog.ceo/breeds/bulldog-boston/20200710_175944.jpg",
+        "https://images.dog.ceo/breeds/bulldog-english/jager-1.jpg",
+        "https://images.dog.ceo/breeds/bulldog-english/jager-2.jpg",
+        "https://images.dog.ceo/breeds/bulldog-english/mami.jpg",
+        "https://images.dog.ceo/breeds/bulldog-english/murphy.jpg",
+        "https://images.dog.ceo/breeds/bulldog-french/n02108915_1343.jpg",
+        "https://images.dog.ceo/breeds/bulldog-french/n02108915_142.jpg",
+        "https://images.dog.ceo/breeds/bulldog-french/n02108915_1465.jpg"
+      ],
+    },
+    {
+      breed: {
+        name: "collie",
+        type: "breed",
+        checked: false
+      },
+      subBreed: [
+        { name: "collie-border", type: "sub_breed", checked: false }
+      ],
+      images: [
+          "https://images.dog.ceo/breeds/collie-border/brodie.jpg",
+          "https://images.dog.ceo/breeds/collie-border/n02106166_1031.jpg"
+      ],
+    },
+    {
+      breed: {
+        name: "akita",
+        type: "breed",
+        checked: false
+      },
+      subBreed: [],
+      images: [
+          "https://images.dog.ceo/breeds/akita/Akina_Inu_in_Riga_1.jpg"
+      ],
+    }
+]
 
 const DogCeo = () => {
     const classes = useStyles()
     const dispatch = useDispatch()
-    const breeds = useSelector(store => store.data.data)
+    const state  = useSelector(store => store.data.dataDogs)
     const loading = useSelector(store => store.data.loading)   
-    const images = useSelector(store=>store.data.data_images)          
+    const [dogCeo, setDogCeo] = React.useState(DUMMY_DATA) 
     
-    const [open, setOpen] = React.useState(false)   
-    const [arrayBuscados, setArrayBuscados] = React.useState([])     
+    const ITEMS_COLLAPSE = ['breed', 'sub_breed']    
+    
+    const DATA_UI = {
+        collapseBreed: false,
+        collapseSubBreed:false
+    }
+
+    const [open, setOpen] = React.useState(false) 
+    const [openCollapses, setOpenCollapses] = React.useState(DATA_UI)
     
     React.useEffect(()=>{
         const fetchData = ()=>{
-            dispatch(getBreedsDogsAction())                       
+            dispatch(getBreedsDogsAction())                                           
         }
-        fetchData()
-    },[dispatch])  
+        fetchData()  
+    },[dispatch])
 
-    React.useEffect(()=>{    
-        const shearchDogs = () =>{             
-            arrayBuscados.map(breed=> (                          
-                dispatch(shearchImagesDogsAction(breed,arrayBuscados)) 
-            ))   
-        }
-        shearchDogs()
-    },[dispatch, arrayBuscados])
+    React.useEffect(()=>{
+        setDogCeo(state)
+    },[state])
 
-    const arrayBreeds = breeds.map(item=>{
-        return item.breed
-    })
-    
-    const arraySubBreeds = breeds.filter(item=>{
-        return (item.subBreed.length > 0) ? item.subBreed : null
-    }).map(e =>{ 
-        return e.subBreed
-    })
     const openMenu = () =>{        
         setOpen(!open)
     }
 
-    const getArrayBuscados = (buscados) =>{
-        if(buscados.length > 0 ){
-            setArrayBuscados(buscados)      
-        }   
-    }    
-    
-    /* const nuevoArraySubbreeds = arrayBuscados.map(item=>{        
-        return breeds.filter(b=>{                       
-            return(b.subBreed.length > 0 && b.breed === item) ? b.subBreed : null
-        })
-        .map(e=>{                      
-            return e.subBreed
-        })
+    const handleClickCollapses = (value) =>{            
+        if(value === "Razas"){
+            setOpenCollapses({
+                ...openCollapses,
+                collapseBreed: !openCollapses.collapseBreed
+            })
+            
+        }else{
+            setOpenCollapses({
+                ...openCollapses,
+                collapseSubBreed: !openCollapses.collapseSubBreed
+            })
+        }
         
-    }) */
+    }
 
+    const checkBoxHandler = (arr, type, name, value) =>{   
+        const listBreeds = arr.map(element =>{       
+            if(type ==='breed'){
+                if(element.breed.name === name){
+                  return {...element, breed: {...element.breed, checked: !value}}
+                }
+            }  
+            if(type === 'sub_breed') {            
+                const newSubBreed = element.subBreed.map(sub=>{                
+                    if(sub.name === name && element.breed.checked){
+                        return {...sub, checked: !value}
+                    }                        
+                    return sub
+                }) 
+                return {...element, subBreed: newSubBreed} 
+            }
+            return element
+        })
+        setDogCeo(listBreeds)
+      }
+    ////
     return (        
         <div className={classes.root}>
             <Navbar open={openMenu}/>
             <Hidden xsDown>
-                <Filters variant="permanent" open={true} dataBreeds={arrayBreeds} dataSubBreeds={arraySubBreeds} loading={loading} buscados={getArrayBuscados}/>
+                <Filters 
+                    variant="permanent" 
+                    open={true} 
+                    items={ITEMS_COLLAPSE} 
+                    clicked={handleClickCollapses} 
+                    openCol={openCollapses}  
+                    change={checkBoxHandler}                                                           
+                    dogCeo={dogCeo}/>
             </Hidden>
             <Hidden smUp>
-                <Filters variant="temporary" open={open} dataBreeds={arrayBreeds} dataSubBreeds={arraySubBreeds} loading={loading} buscados={getArrayBuscados} closed={openMenu}/>
+                <Filters 
+                    variant="temporary" 
+                    open={open} 
+                    items={ITEMS_COLLAPSE} 
+                    clicked={handleClickCollapses} 
+                    openCol={openCollapses}
+                    change={checkBoxHandler}  
+                    dogCeo={dogCeo} 
+                    closed={openMenu}/>
             </Hidden>            
             <div className={classes.content}>
                 <div className={classes.toolBar}>       
                     {                        
                         !loading ? (
-                            images.length > 0 ? (
-                                <Card images={images} breedSearch={arrayBuscados}/>
-                            ) :
-                            <Info/> 
+                            <Card dogCeo={dogCeo} />
                         ): 
                         <Loading/>
                     }             

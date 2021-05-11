@@ -1,7 +1,5 @@
-import { Checkbox, Collapse, List, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core'
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import PetsTwoToneIcon from '@material-ui/icons/PetsTwoTone';
+import { Checkbox, ListItem, ListItemIcon, ListItemText, makeStyles } from '@material-ui/core'
+
 import React from 'react'
 
 const useStyles = makeStyles((theme) => ({       
@@ -11,75 +9,44 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ItemNav = (props) => {
-    const classes = useStyles()  
-    
-    const [open, setOpen] = React.useState(false) 
-    const [isChecked, setIsChecked] = React.useState(props.data.slice().fill(false).flat())  
-    const [buscados, setBuscado] = React.useState([])     
+    const classes = useStyles()
+    return ( 
+        <>   
+        {            
+            props.type === 'sub_breed' ? 
+            (
+                props.dogCeo.map((filter,idx)=>(
+                    filter.breed.checked &&
+                    filter.subBreed.map(sub=>(    
+                        <ListItem key={`${sub.name}${idx}`} button className={classes.nested}>
+                            <ListItemIcon>                                            
+                                <Checkbox                                     
+                                    onChange={()=>props.change(props.dogCeo, props.type, sub.name, sub.checked)}
+                                    value={sub.name}
+                                    checked={sub.checked}
+                                />                                                                                      
+                            </ListItemIcon>
+                            <ListItemText primary={sub.name}></ListItemText>
+                        </ListItem> 
+                    ))
+                ))
+            ) : (
+            props.dogCeo.map((filter,idx)=>(
+                <ListItem key={`${filter.breed.name}${idx}`} button className={classes.nested}>
+                    <ListItemIcon>                                            
+                        <Checkbox 
+                            onChange={()=>props.change(props.dogCeo, props.type, filter.breed.name, filter.breed.checked)}
+                            value={filter.breed.name}
+                            checked={filter.breed.checked}
+                        />                                                                                      
+                    </ListItemIcon>
+                    <ListItemText primary={filter.breed.name}></ListItemText>
+                </ListItem> 
 
-    React.useEffect(()=>{
-        const fetchBuscados = () =>{
-            props.arrayBuscados(buscados)
-        }
-        fetchBuscados()
-    },[props,buscados])
-        
-    const handleClick = () =>{    
-        setOpen(!open)  
-    }   
-
-    const toogleCheckChange = (index, breed) =>{ 
-        const check = isChecked.map((estado,i) => { 
-            return i === index ? !estado : estado
-        })
-        setIsChecked(check)  
-        if(!isChecked[index]){ 
-            if(!buscados.includes(breed)){
-                setBuscado([
-                    ...buscados,
-                    breed
-                ]) 
-            }          
-        }else{
-            buscados.filter(item=> item !== breed)
-            setBuscado(buscados.filter(item=> item !== breed))           
-        }  
-         
-    }
-    
-    return (
-        <List component="nav">
-            <ListItem button onClick={handleClick}>
-                <ListItemIcon>
-                    <PetsTwoToneIcon/>
-                </ListItemIcon>
-                <ListItemText primary={props.nameItem}/>
-                {
-                    open ? <ExpandLessIcon/> : <ExpandMoreIcon/>
-                }
-            </ListItem> 
-            {
-                !props.loading &&
-                (
-                    <Collapse in={open} timeout="auto">
-                        <List component="div">
-                            {
-                                props.data.map((item,index)=>(   
-                                    item.length > 0 &&                                 
-                                    <ListItem key={`${item}${index}`} button className={classes.nested}>
-                                        <ListItemIcon>                                            
-                                            <Checkbox value={item} checked={isChecked[index]} onChange={()=>toogleCheckChange(index,item)}></Checkbox>                                                                                      
-                                        </ListItemIcon>
-                                        <ListItemText primary={item}></ListItemText>
-                                    </ListItem>                                                                       
-                                ))
-                            }
-                        </List>
-                    </Collapse>  
-                )
-            }
-                     
-        </List>
+            ))                
+            )
+        }    
+        </> 
     )
 }
 

@@ -1,5 +1,5 @@
-import DogCeo from "./components/DogCeo/DogCeo";
 import { ThemeProvider, unstable_createMuiStrictModeTheme as createMuiTheme} from '@material-ui/core/styles'
+import DogCeo from './presentation/UI/DogCeo/DogCeo';
 
 
 function App() {

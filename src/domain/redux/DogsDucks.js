@@ -1,5 +1,5 @@
 import axios from 'axios'
-import configuration from '../config/config'
+import configuration from '../../config/config'
 //contantes
 
 

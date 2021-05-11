@@ -1,6 +1,5 @@
 import { CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
-import Info from '../Info/Info'
 
 const useStyles = makeStyles((theme)=> ({   
     content: {

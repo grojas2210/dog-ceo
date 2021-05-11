@@ -1,12 +1,11 @@
 import { Hidden, makeStyles } from '@material-ui/core'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {getBreedsDogsAction} from '../../redux/DogsDucks'
-import Card from '../Card/Card'
-import Filters from '../Filters/Filters'
-import Info from '../Info/Info'
-import Loading from '../Loading/Loading'
-import Navbar from '../Navbar/Navbar'
+import {getBreedsDogsAction} from '../../../domain/redux/DogsDucks'
+import Card from '../../components/Card/Card'
+import Filters from '../../components/Filters/Filters'
+import Loading from '../../components/Loading/Loading'
+import Navbar from '../../components/Navbar/Navbar'
 
 const useStyles = makeStyles((theme)=> ({
     root: {

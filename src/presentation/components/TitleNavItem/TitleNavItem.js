@@ -5,8 +5,10 @@ import PetsTwoToneIcon from '@material-ui/icons/PetsTwoTone';
 import React from 'react'
 import ItemNav from '../ItemNav/ItemNav';
 
+import PropTypes from 'prop-types'
+
 const TitleNavItem = (props) => {
-    return (        
+    return (
         <>
         <ListItem button onClick={()=>props.clicked(props.nameItem)}>
             <ListItemIcon>
@@ -16,15 +18,37 @@ const TitleNavItem = (props) => {
             {
                 props.openCol ? <ExpandLessIcon/> : <ExpandMoreIcon/>
             }
-        </ListItem> 
+        </ListItem>
         <Collapse in={props.openCol} timeout="auto">
-            <List component="div">                
-                <ItemNav dogCeo={props.dogCeo} type={props.type} change={props.change}/>                
+            <List component="div">
+                <ItemNav dogCeo={props.dogCeo} type={props.type} change={props.change}/>
             </List>
-        </Collapse> 
-        
+        </Collapse>
+
         </>
     )
+}
+
+TitleNavItem.propTypes = {
+    nameItem: PropTypes.string,
+    openCol: PropTypes.bool,
+    type: PropTypes.string,
+    change: PropTypes.func.isRequired,
+    clicked: PropTypes.func,
+    dogCeo: PropTypes.arrayOf(PropTypes.shape({        
+        breed: PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool,
+        }),
+        subBreed: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool, 
+        })),
+        images: PropTypes.arrayOf(PropTypes.string)
+
+    }))    
 }
 
 export default TitleNavItem

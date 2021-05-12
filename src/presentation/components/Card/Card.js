@@ -1,6 +1,8 @@
 import { CardActionArea, CardContent, CardMedia, Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 
+import PropTypes from 'prop-types'
+
 const useStyles = makeStyles((theme)=> ({   
     content: {
         flexGrow: 1,        
@@ -63,6 +65,24 @@ const Card = (props) => {
                    
         </Grid> 
     )
+}
+
+Card.propTypes ={
+    dogCeo: PropTypes.arrayOf(PropTypes.shape({        
+        breed: PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool,
+        }),
+        subBreed: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool, 
+        })),
+        images: PropTypes.arrayOf(PropTypes.string)
+
+    }))
+
 }
 
 export default Card

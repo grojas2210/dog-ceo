@@ -2,6 +2,8 @@ import { Checkbox, ListItem, ListItemIcon, ListItemText, makeStyles } from '@mat
 
 import React from 'react'
 
+import PropTypes from 'prop-types'
+
 const useStyles = makeStyles((theme) => ({       
     nested: {
       paddingLeft: theme.spacing(4),
@@ -48,6 +50,25 @@ const ItemNav = (props) => {
         }    
         </> 
     )
+}
+
+ItemNav.propTypes = {
+    type: PropTypes.string,
+    change: PropTypes.func,
+    dogCeo: PropTypes.arrayOf(PropTypes.shape({        
+        breed: PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool,
+        }),
+        subBreed: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool, 
+        })),
+        images: PropTypes.arrayOf(PropTypes.string)
+
+    }))   
 }
 
 export default ItemNav

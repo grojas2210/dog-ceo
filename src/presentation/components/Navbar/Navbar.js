@@ -3,6 +3,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import React from 'react'
 
+import PropTypes from 'prop-types'
+
 const useStyles = makeStyles((theme)=>({
     root: {
         display: 'flex',
@@ -41,6 +43,10 @@ const Navbar = (props) => {
             </AppBar>
         </div>
     )
+}
+
+Navbar.propTypes = {
+    open: PropTypes.func
 }
 
 export default Navbar

@@ -1,6 +1,9 @@
 import { Drawer, List, makeStyles } from '@material-ui/core'
 import React from 'react'
 import TitleNavItem from '../TitleNavItem/TitleNavItem';
+
+import PropTypes from 'prop-types'
+
 const drawerWidth = 260;
 
 const useStyles = makeStyles((theme)=>({
@@ -47,6 +50,33 @@ const Filters = (props) => {
             
         </Drawer>
     )
+}
+
+Filters.propTypes = {
+    variant: PropTypes.string.isRequired,
+    open: PropTypes.bool,   
+    items: PropTypes.arrayOf(PropTypes.string),
+    openCol: PropTypes.shape({
+        collapseBreed: PropTypes.bool,
+        collapseSubBreed: PropTypes.bool
+    }),
+    dogCeo: PropTypes.arrayOf(PropTypes.shape({        
+        breed: PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool,
+        }),
+        subBreed: PropTypes.arrayOf(PropTypes.shape({
+            name: PropTypes.string,
+            type: PropTypes.string,
+            checked: PropTypes.bool, 
+        })),
+        images: PropTypes.arrayOf(PropTypes.string)
+
+    })),
+    closed: PropTypes.func,
+    clicked: PropTypes.func,
+    change: PropTypes.func,
 }
 
 export default Filters
